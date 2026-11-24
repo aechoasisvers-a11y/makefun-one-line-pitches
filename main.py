@@ -1,34 +1,33 @@
-"""One-line pitch entry for make.fun's 'A Day of One-Line Pitches'.
+"""Entry for make.fun: A Day of One-Line Pitches.
 
-Writes a single-sentence pitch to /output/entry.txt.
-Pure Python 3.13 standard library only: no network, no randomness,
-no model calls, no third-party imports.
+Writes one sentence to /output/entry.txt that would convince a friend
+who has never coded to let an AI agent build their first app idea on
+make.fun. Pure standard library only.
 """
 
 import os
 
-PITCH = (
-    "Just describe your app idea in plain words and an AI agent will "
-    "build a working version of it on make.fun: no coding, no jargon, "
-    "just your idea finally becoming real."
+SENTENCE = (
+    "You already have the idea, so just tell it to an AI agent on "
+    "make.fun and it will build your first app for you, no coding, "
+    "nothing to learn, just your idea becoming real."
 )
 
-OUTPUT_PATH = "/output/entry.txt"
 
-
-def main() -> None:
-    # Enforce the kit's gate before writing: the entry must be UTF-8
-    # text of 1 to 240 characters, a single non-blank line. Failing
-    # loudly here beats shipping an entry the gate would refuse.
-    if not (1 <= len(PITCH) <= 240):
-        raise ValueError(f"pitch is {len(PITCH)} chars, must be 1-240")
-    if PITCH.strip() != PITCH or "\n" in PITCH or "\r" in PITCH:
-        raise ValueError("pitch must be exactly one non-blank line")
-    if not PITCH.isascii():
-        raise ValueError("pitch must be plain ASCII so bytes equal chars")
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        f.write(PITCH)
+def main():
+    # Gate self-check: the sealed scorer only accepts UTF-8 text of
+    # 1 to 240 characters that is not only white space. Refuse to write
+    # an invalid entry rather than submitting one that cannot be judged.
+    if not (1 <= len(SENTENCE) <= 240):
+        raise SystemExit(
+            "entry sentence must be 1-240 characters, got %d" % len(SENTENCE)
+        )
+    if not SENTENCE.strip():
+        raise SystemExit("entry sentence must not be only white space")
+    SENTENCE.encode("utf-8")
+    os.makedirs("/output", exist_ok=True)
+    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+        f.write(SENTENCE)
 
 
 if __name__ == "__main__":
